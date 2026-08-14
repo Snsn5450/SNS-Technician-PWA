@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.snsn5450.twa",
+      "sha256_cert_fingerprints": [
+        "5B:9F:E8:D4:8F:14:14:CB:38:C7:C2:63:1C:26:6F:7C:2B:82:92:C1:B5:AF:58:55:12:AF:2B:A7:E8:3C:A1:5B"
+      ]
+    }
+  }
+]
