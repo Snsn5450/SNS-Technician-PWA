@@ -22,11 +22,96 @@
   <div id="loading">SNS Technician Loading...</div>
   <iframe id="app" src="https://script.google.com/macros/s/AKfycby6-fwnjy-9AagLD40_52m5OcrskspcJUEtn-ivPMboLl1ks31BFw8AZmgeCm-PVOFh/exec?view=technician" allow="camera; microphone; geolocation; clipboard-read; clipboard-write"></iframe>
   <script>
-    const frame=document.getElementById('app');
-    frame.addEventListener('load',()=>document.getElementById('loading').style.display='none');
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js'));
+  <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"></script>
+
+<script>
+const frame = document.getElementById('app');
+
+frame.addEventListener('load', () => {
+  document.getElementById('loading').style.display = 'none';
+});
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDd-3gnrRVVUxl0eGavhrwzz7knHMHkRDY",
+  authDomain: "sns-maintenance-app.firebaseapp.com",
+  projectId: "sns-maintenance-app",
+  storageBucket: "sns-maintenance-app.firebasestorage.app",
+  messagingSenderId: "596031864320",
+  appId: "1:596031864320:web:72c0f26c27e90b400ea2e5"
+};
+
+firebase.initializeApp(firebaseConfig);
+const messaging = firebase.messaging();
+
+let swRegistration = null;
+
+async function preparePush() {
+  if (!('serviceWorker' in navigator)) {
+    throw new Error('Service Worker supported नहीं है।');
+  }
+
+  swRegistration = await navigator.serviceWorker.register('./service-worker.js');
+
+  const permission = await Notification.requestPermission();
+
+  if (permission !== 'granted') {
+    throw new Error('Notification permission Allow करें।');
+  }
+
+  const token = await messaging.getToken({
+    vapidKey: "BM6UBlXbNvGYJXWAfI9CKCKVjGI_B2QpuXnzPbu9kjxidg64SzcnZr1vkEyh2PpwBf9o8gcYCq3ruiCDNZ1sDvo",
+    serviceWorkerRegistration: swRegistration
+  });
+
+  if (!token) {
+    throw new Error('FCM token नहीं मिला।');
+  }
+
+  return token;
+}
+
+window.addEventListener('message', async function(event) {
+  const data = event.data || {};
+
+  if (data.type !== 'SNS_ENABLE_PUSH') return;
+
+  try {
+    const fcmToken = await preparePush();
+
+    const bridgeUrl =
+      data.bridgeUrl +
+      '&mode=register' +
+      '&loginToken=' + encodeURIComponent(data.loginToken) +
+      '&fcmToken=' + encodeURIComponent(fcmToken);
+
+    let bridge = document.getElementById('snsPushBridge');
+
+    if (!bridge) {
+      bridge = document.createElement('iframe');
+      bridge.id = 'snsPushBridge';
+      bridge.style.display = 'none';
+      document.body.appendChild(bridge);
     }
+
+    bridge.src = bridgeUrl;
+
+  } catch (error) {
+    frame.contentWindow.postMessage({
+      type: 'SNS_PUSH_ERROR',
+      message: error.message || String(error)
+    }, '*');
+  }
+});
+
+window.addEventListener('message', function(event) {
+  const data = event.data || {};
+
+  if (data.type === 'SNS_REGISTER_FCM_RESULT') {
+    frame.contentWindow.postMessage(data, '*');
+  }
+});
+</script>
   </script>
 </body>
 </html>
