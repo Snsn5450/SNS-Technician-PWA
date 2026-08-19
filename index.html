@@ -184,11 +184,9 @@ async function preparePush(){
   /* Register Firebase service worker */
 
   swRegistration =
-    await navigator
-      .serviceWorker
-      .register(
-        "./service-worker.js"
-      );
+  await navigator.serviceWorker.register(
+    "./firebase-messaging-sw.js"
+  );
 
 
   await navigator
