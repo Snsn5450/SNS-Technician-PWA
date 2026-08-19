@@ -2,11 +2,20 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover">
+
   <meta name="theme-color" content="#0b57d0">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <meta
+    name="mobile-web-app-capable"
+    content="yes">
+
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes">
 
   <title>SNS Technician</title>
 
@@ -15,14 +24,16 @@
   <link rel="apple-touch-icon" href="./icon-192.png">
 
   <style>
-    *{box-sizing:border-box}
+    *{
+      box-sizing:border-box;
+    }
 
     html,body{
       height:100%;
       margin:0;
-      background:#fff;
+      background:#ffffff;
       font-family:Arial,sans-serif;
-      overflow:hidden
+      overflow:hidden;
     }
 
     #loading{
@@ -32,10 +43,10 @@
       align-items:center;
       justify-content:center;
       background:#0b57d0;
-      color:white;
+      color:#ffffff;
       z-index:10;
       font-size:20px;
-      font-weight:700
+      font-weight:700;
     }
 
     iframe{
@@ -43,14 +54,18 @@
       height:100dvh;
       border:0;
       display:block;
-      background:#fff
+      background:#ffffff;
     }
   </style>
 </head>
 
+
 <body>
 
-<div id="loading">SNS Technician Loading...</div>
+<div id="loading">
+  SNS Technician Loading...
+</div>
+
 
 <iframe
   id="app"
@@ -59,78 +74,149 @@
 </iframe>
 
 
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"></script>
+<script
+src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js">
+</script>
+
+<script
+src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js">
+</script>
 
 
 <script>
 
-const frame = document.getElementById("app");
+/* ==========================================
+   SNS TECHNICIAN PWA
+   NEW FIREBASE PROJECT
+========================================== */
 
-frame.addEventListener("load", function () {
-  document.getElementById("loading").style.display = "none";
-});
 
+const frame =
+  document.getElementById("app");
+
+
+frame.addEventListener(
+  "load",
+  function(){
+
+    document.getElementById(
+      "loading"
+    ).style.display =
+      "none";
+
+  }
+);
+
+
+
+/* ==========================================
+   FIREBASE CONFIG
+   NEW PROJECT = sns-maintenance-pwa
+========================================== */
 
 const firebaseConfig = {
 
   apiKey:
-    "AIzaSyDd-3gnrRVVUxl0eGavhrwzz7knHMHkRDY",
+    "AIzaSyDJVPZFRkzWKJ58cyIfaiuPqdvY4cYYzvE",
 
   authDomain:
-    "sns-maintenance-app.firebaseapp.com",
+    "sns-maintenance-pwa.firebaseapp.com",
 
   projectId:
-    "sns-maintenance-app",
+    "sns-maintenance-pwa",
 
   storageBucket:
-    "sns-maintenance-app.firebasestorage.app",
+    "sns-maintenance-pwa.firebasestorage.app",
 
   messagingSenderId:
-    "596031864320",
+    "683218813920",
 
   appId:
-    "1:596031864320:web:72c0f26c27e90b400ea2e5"
+    "1:683218813920:web:a091496adb477c47502185"
 
 };
 
 
-firebase.initializeApp(firebaseConfig);
-
-const messaging = firebase.messaging();
-
-let swRegistration = null;
+firebase.initializeApp(
+  firebaseConfig
+);
 
 
-async function preparePush() {
+const messaging =
+  firebase.messaging();
 
-  if (!("serviceWorker" in navigator)) {
+
+let swRegistration =
+  null;
+
+
+
+/* ==========================================
+   IMPORTANT
+
+   यहाँ NEW Firebase project
+   sns-maintenance-pwa की
+   Web Push certificate public key डालनी है
+========================================== */
+
+const VAPID_KEY =
+  "BAC5d1x13WjnMMSiJQKMCVXYCN4HdeMg4bzCu3Mbj14SfFJtvs3dg2AgBvFWGRW_GaFFg0cnNZNyfr5tjclcots";
+
+
+
+/* ==========================================
+   PREPARE SCREEN-OFF PUSH
+========================================== */
+
+async function preparePush(){
+
+  if(
+    !("serviceWorker" in navigator)
+  ){
+
     throw new Error(
-      "Service Worker इस device में supported नहीं है।"
+      "Service Worker supported नहीं है।"
     );
+
   }
 
+
+  /* Register Firebase service worker */
 
   swRegistration =
-    await navigator.serviceWorker.register(
-      "./service-worker.js"
-    );
+    await navigator
+      .serviceWorker
+      .register(
+        "./service-worker.js"
+      );
 
 
-  await navigator.serviceWorker.ready;
+  await navigator
+    .serviceWorker
+    .ready;
 
 
-  let permission = Notification.permission;
 
-  if (permission !== "granted") {
+  /* Notification Permission */
+
+  let permission =
+    Notification.permission;
+
+
+  if(
+    permission === "default"
+  ){
 
     permission =
-      await Notification.requestPermission();
+      await Notification
+        .requestPermission();
 
   }
 
 
-  if (permission !== "granted") {
+  if(
+    permission !== "granted"
+  ){
 
     throw new Error(
       "Notification permission Allow करें।"
@@ -139,11 +225,27 @@ async function preparePush() {
   }
 
 
-  const token =
+
+  if(
+    !VAPID_KEY ||
+    VAPID_KEY.indexOf("PASTE_") === 0
+  ){
+
+    throw new Error(
+      "New Firebase VAPID Key अभी set नहीं है।"
+    );
+
+  }
+
+
+
+  /* Get FCM Token */
+
+  const fcmToken =
     await messaging.getToken({
 
       vapidKey:
-        "BM6UBlXbNvGYJXWAfI9CKCKVjGI_B2QpuXnzPbu9kjxidg64SzcnZr1vkEyh2PpwBf9o8gcYCq3ruiCDNZ1sDvo",
+        VAPID_KEY,
 
       serviceWorkerRegistration:
         swRegistration
@@ -151,74 +253,123 @@ async function preparePush() {
     });
 
 
-  if (!token) {
+  if(
+    !fcmToken
+  ){
 
     throw new Error(
-      "FCM token नहीं मिला।"
+      "FCM Token नहीं मिला।"
     );
 
   }
 
 
   console.log(
-    "SNS FCM TOKEN:",
-    token
+    "SNS NEW FCM TOKEN:",
+    fcmToken
   );
 
 
-  return token;
+  return fcmToken;
+
 }
 
 
 
+/* ==========================================
+   TECHNICIAN APP ASKS TO ENABLE PUSH
+========================================== */
+
 window.addEventListener(
   "message",
-  async function (event) {
+  async function(event){
 
-    const data = event.data || {};
+    const data =
+      event.data || {};
 
 
-    if (data.type !== "SNS_ENABLE_PUSH") {
+    if(
+      data.type !==
+      "SNS_ENABLE_PUSH"
+    ){
+
       return;
+
     }
 
 
-    try {
+    try{
+
+
+      frame.contentWindow
+        .postMessage({
+
+          type:
+            "SNS_PUSH_PROGRESS",
+
+          message:
+            "Notification enable हो रही है..."
+
+        }, "*");
+
+
 
       const fcmToken =
         await preparePush();
 
 
-      if (
-        !data.bridgeUrl ||
-        !data.loginToken
-      ) {
+
+      if(
+        !data.bridgeUrl
+      ){
 
         throw new Error(
-          "Push registration information missing है।"
+          "Push bridge URL नहीं मिला।"
         );
 
       }
 
 
+      if(
+        !data.loginToken
+      ){
+
+        throw new Error(
+          "Technician login token नहीं मिला। दोबारा login करें।"
+        );
+
+      }
+
+
+
       const separator =
-        data.bridgeUrl.indexOf("?") >= 0
+        data.bridgeUrl
+          .indexOf("?") >= 0
           ? "&"
           : "?";
 
 
+
       const bridgeUrl =
+
         data.bridgeUrl +
+
         separator +
+
         "mode=register" +
+
         "&loginToken=" +
+
         encodeURIComponent(
           data.loginToken
         ) +
+
         "&fcmToken=" +
+
         encodeURIComponent(
           fcmToken
         );
+
 
 
       let bridge =
@@ -227,31 +378,53 @@ window.addEventListener(
         );
 
 
-      if (!bridge) {
+      if(!bridge){
 
         bridge =
           document.createElement(
             "iframe"
           );
 
+
         bridge.id =
           "snsPushBridge";
+
 
         bridge.style.display =
           "none";
 
-        document.body.appendChild(
-          bridge
-        );
+
+        document.body
+          .appendChild(
+            bridge
+          );
 
       }
 
 
+      /*
+       नया URL force करने के लिए
+       पहले blank करें
+      */
+
       bridge.src =
-        bridgeUrl;
+        "about:blank";
 
 
-    } catch (error) {
+      setTimeout(
+        function(){
+
+          bridge.src =
+            bridgeUrl;
+
+        },
+        100
+      );
+
+
+    }
+    catch(error){
+
 
       console.error(
         "SNS PUSH ERROR:",
@@ -259,18 +432,19 @@ window.addEventListener(
       );
 
 
-      frame.contentWindow.postMessage({
+      frame.contentWindow
+        .postMessage({
 
-        type:
-          "SNS_PUSH_ERROR",
+          type:
+            "SNS_PUSH_ERROR",
 
-        message:
-          error &&
-          error.message
+          message:
+            error &&
+            error.message
             ? error.message
             : String(error)
 
-      }, "*");
+        }, "*");
 
     }
 
@@ -279,23 +453,86 @@ window.addEventListener(
 
 
 
+/* ==========================================
+   RESULT FROM APPS SCRIPT PUSH BRIDGE
+========================================== */
+
 window.addEventListener(
   "message",
-  function (event) {
+  function(event){
 
     const data =
       event.data || {};
 
 
-    if (
+    if(
       data.type ===
       "SNS_REGISTER_FCM_RESULT"
-    ) {
+    ){
 
-      frame.contentWindow.postMessage(
-        data,
-        "*"
+      console.log(
+        "SNS REGISTER RESULT:",
+        data
       );
+
+
+      frame.contentWindow
+        .postMessage(
+          data,
+          "*"
+        );
+
+    }
+
+  }
+);
+
+
+
+/* ==========================================
+   FOREGROUND MESSAGE
+========================================== */
+
+messaging.onMessage(
+  function(payload){
+
+    console.log(
+      "Foreground notification:",
+      payload
+    );
+
+
+    const title =
+      payload.notification &&
+      payload.notification.title
+      ? payload.notification.title
+      : "🚨 SNS Maintenance";
+
+
+    const body =
+      payload.notification &&
+      payload.notification.body
+      ? payload.notification.body
+      : "New maintenance complaint";
+
+
+    if(
+      Notification.permission ===
+      "granted"
+    ){
+
+      try{
+
+        new Notification(
+          title,
+          {
+            body:body,
+            icon:"./icon-192.png"
+          }
+        );
+
+      }
+      catch(ignore){}
 
     }
 
