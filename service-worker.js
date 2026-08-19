@@ -1,97 +1,122 @@
-const C = 'sns-tech-v2';
-const A = [
-  './',
-  './index.html',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png'
-];
-
-/* =========================
-   OFFLINE CACHE
-========================= */
-
-self.addEventListener('install', event => {
-  self.skipWaiting();
-
-  event.waitUntil(
-    caches.open(C).then(cache => cache.addAll(A))
-  );
-});
-
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    Promise.all([
-      self.clients.claim(),
-
-      caches.keys().then(keys =>
-        Promise.all(
-          keys
-            .filter(key => key !== C)
-            .map(key => caches.delete(key))
-        )
-      )
-    ])
-  );
-});
-
-self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') return;
-
-  event.respondWith(
-    fetch(event.request)
-      .catch(() =>
-        caches.match(event.request)
-          .then(response =>
-            response || caches.match('./index.html')
-          )
-      )
-  );
-});
-
-
-/* =========================
-   FIREBASE CLOUD MESSAGING
-========================= */
-
 importScripts(
-  'https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js'
+  "https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"
 );
 
 importScripts(
-  'https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js'
+  "https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"
 );
 
 firebase.initializeApp({
-
-  apiKey: "AIzaSyDd-3gnrRVVUxl0eGavhrwzz7knHMHkRDY",
-
-  authDomain:
-    "sns-maintenance-app.firebaseapp.com",
-
-  projectId:
-    "sns-maintenance-app",
-
-  storageBucket:
-    "sns-maintenance-app.firebasestorage.app",
-
-  messagingSenderId:
-    "596031864320",
-
-  appId:
-    "1:596031864320:web:72c0f26c27e90b400ea2e5"
-
+  apiKey: "AIzaSyDJVPZFRkzWKJ58cyIfaiuPqdvY4cYYzvE",
+  authDomain: "sns-maintenance-pwa.firebaseapp.com",
+  projectId: "sns-maintenance-pwa",
+  storageBucket: "sns-maintenance-pwa.firebasestorage.app",
+  messagingSenderId: "683218813920",
+  appId: "1:683218813920:web:a091496adb477c47502185"
 });
-
 
 const messaging = firebase.messaging();
 
 
-messaging.onBackgroundMessage(payload => {
+messaging.onBackgroundMessage(function(payload){
 
   console.log(
-    '[SNS] Background message received:',
+    "SNS BACKGROUND PUSH:",
     payload
   );
 
+  const title =
+    payload.notification?.title ||
+    "🚨 SNS Maintenance";
+
+  const options = {
+
+    body:
+      payload.notification?.body ||
+      "New maintenance complaint received.",
+
+    icon:
+      "./icon-192.png",
+
+    badge:
+      "./icon-192.png",
+
+    vibrate:
+      [300,150,300,150,500],
+
+    requireInteraction:
+      true,
+
+    tag:
+      payload.data?.tag ||
+      "sns-maintenance",
+
+    data: {
+      url:
+        payload.data?.url ||
+        "https://snsn5450.github.io/SNS-Technician-PWA/"
+    }
+  };
+
+
+  return self.registration
+    .showNotification(
+      title,
+      options
+    );
+
 });
+
+
+self.addEventListener(
+  "notificationclick",
+  function(event){
+
+    event.notification.close();
+
+    const targetUrl =
+      event.notification?.data?.url ||
+      "https://snsn5450.github.io/SNS-Technician-PWA/";
+
+
+    event.waitUntil(
+
+      clients.matchAll({
+        type:"window",
+        includeUncontrolled:true
+      })
+      .then(function(clientList){
+
+        for(
+          const client of clientList
+        ){
+
+          if(
+            "focus" in client
+          ){
+
+            client.navigate(
+              targetUrl
+            );
+
+            return client.focus();
+          }
+
+        }
+
+
+        if(
+          clients.openWindow
+        ){
+
+          return clients.openWindow(
+            targetUrl
+          );
+        }
+
+      })
+
+    );
+
+  }
+);
