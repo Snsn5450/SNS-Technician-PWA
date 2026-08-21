@@ -1,5 +1,6 @@
-{
-"name":"SNS Technician","short_name":"SNS Tech","description":"SNS Maintenance Technician App",
-"start_url":"./","scope":"./","display":"standalone","background_color":"#ffffff","theme_color":"#0b57d0",
-"icons":[{"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
-{"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}
+importScripts("https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js");
+firebase.initializeApp({apiKey:"AIzaSyDJVPZFRkzWKJ58cyIfaiuPqdvY4cYYzvE",authDomain:"sns-maintenance-pwa.firebaseapp.com",projectId:"sns-maintenance-pwa",storageBucket:"sns-maintenance-pwa.firebasestorage.app",messagingSenderId:"683218813920",appId:"1:683218813920:web:a091496adb477c47502185"});
+const messaging=firebase.messaging();
+messaging.onBackgroundMessage(function(payload){console.log("SNS background FCM",payload);});
+self.addEventListener("notificationclick",e=>{e.notification.close();e.waitUntil(clients.openWindow("./"));});
