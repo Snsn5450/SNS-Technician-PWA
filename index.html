@@ -2,33 +2,162 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover">
+
   <meta name="theme-color" content="#0b57d0">
+
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
+
   <title>SNS Technician</title>
+
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" href="./icon-192.png">
   <link rel="apple-touch-icon" href="./icon-192.png">
+
   <style>
-    *{box-sizing:border-box}
-    html,body{width:100%;height:100%;margin:0;overflow:hidden;font-family:Arial,sans-serif;background:#fff}
-    #loading{position:fixed;inset:0;z-index:10;display:flex;align-items:center;justify-content:center;background:#0b57d0;color:#fff;font-size:19px;font-weight:800}
-    #app{width:100%;height:100dvh;border:0;display:block;background:#fff}
-    #pushOverlay{position:fixed;inset:0;z-index:99999;display:none;align-items:flex-end;justify-content:center;padding:16px;background:rgba(4,15,35,.60)}
-    #pushOverlay.show{display:flex}
-    .pushCard{width:min(100%,460px);padding:20px;border-radius:22px;background:#fff;color:#152238;box-shadow:0 20px 60px rgba(0,0,0,.35);text-align:center}
-    .pushIcon{font-size:44px;margin-bottom:7px}
-    .pushCard h2{margin:5px 0 8px;font-size:20px}
-    .pushCard p{margin:0 0 16px;color:#5c687b;font-size:13px;line-height:1.45}
-    .pushBtn{width:100%;min-height:50px;border:0;border-radius:14px;color:#fff;background:#0b57d0;font-size:15px;font-weight:900;cursor:pointer}
-    .pushBtn:disabled{opacity:.55}
-    .pushCancel{width:100%;margin-top:8px;min-height:42px;border:0;border-radius:12px;background:#edf2f8;color:#354359;font-weight:800;cursor:pointer}
-    #pushStatus{margin-top:10px;font-size:12px;font-weight:800;color:#0b57d0;min-height:16px}
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #ffffff;
+      font-family: Arial, sans-serif;
+    }
+
+    #loading {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0b57d0;
+      color: white;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    #app {
+      width: 100%;
+      height: 100dvh;
+      border: 0;
+      display: block;
+      background: white;
+    }
+
+    #pushOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+
+      display: none;
+
+      align-items: center;
+      justify-content: center;
+
+      padding: 20px;
+
+      background: rgba(0,0,0,.65);
+    }
+
+    #pushOverlay.show {
+      display: flex;
+    }
+
+    .pushCard {
+      width: 100%;
+      max-width: 420px;
+
+      background: white;
+
+      border-radius: 22px;
+
+      padding: 25px;
+
+      text-align: center;
+
+      box-shadow:
+        0 20px 60px rgba(0,0,0,.35);
+    }
+
+    .pushIcon {
+      font-size: 55px;
+    }
+
+    .pushCard h2 {
+      margin: 10px 0;
+      color: #17233a;
+    }
+
+    .pushCard p {
+      color: #58657a;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    #allowPushBtn {
+      width: 100%;
+      min-height: 52px;
+
+      margin-top: 12px;
+
+      border: 0;
+      border-radius: 14px;
+
+      background: #0b57d0;
+      color: white;
+
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    #allowPushBtn:disabled {
+      opacity: .5;
+    }
+
+    #cancelPushBtn {
+      width: 100%;
+      min-height: 45px;
+
+      margin-top: 10px;
+
+      border: 0;
+      border-radius: 12px;
+
+      background: #edf2f8;
+      color: #354359;
+
+      font-weight: 800;
+    }
+
+    #pushStatus {
+      margin-top: 12px;
+
+      min-height: 18px;
+
+      font-size: 13px;
+      font-weight: 800;
+
+      color: #0b57d0;
+    }
   </style>
 </head>
+
 <body>
-<div id="loading">SNS Technician Loading...</div>
+
+<div id="loading">
+  SNS Technician Loading...
+</div>
+
 
 <iframe
   id="app"
@@ -36,216 +165,661 @@
   allow="camera; microphone; geolocation; clipboard-read; clipboard-write">
 </iframe>
 
+
 <div id="pushOverlay">
+
   <div class="pushCard">
-    <div class="pushIcon">🔔</div>
-    <h2>Enable Screen-Off Alerts</h2>
-    <p>इस phone पर नई complaint की notification screen off और app background में पाने के लिए Allow करें।</p>
-    <button id="allowPushBtn" class="pushBtn">Allow Notifications</button>
-    <button id="cancelPushBtn" class="pushCancel">Not Now</button>
+
+    <div class="pushIcon">
+      🔔
+    </div>
+
+    <h2>
+      Enable Screen-Off Alerts
+    </h2>
+
+    <p>
+      नई maintenance complaint की notification
+      screen off और app background में पाने के लिए
+      notifications Allow करें।
+    </p>
+
+    <button id="allowPushBtn">
+      Allow Notifications
+    </button>
+
+    <button id="cancelPushBtn">
+      Not Now
+    </button>
+
     <div id="pushStatus"></div>
+
   </div>
+
 </div>
 
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js"></script>
+
+<script
+src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js">
+</script>
+
+<script
+src="https://www.gstatic.com/firebasejs/10.13.2/firebase-messaging-compat.js">
+</script>
+
 
 <script>
-const frame = document.getElementById("app");
-const loading = document.getElementById("loading");
-const overlay = document.getElementById("pushOverlay");
-const allowBtn = document.getElementById("allowPushBtn");
-const cancelBtn = document.getElementById("cancelPushBtn");
-const pushStatus = document.getElementById("pushStatus");
+
+/* =========================================
+   SNS TECHNICIAN PWA
+========================================= */
+
+const frame =
+  document.getElementById("app");
+
+const loading =
+  document.getElementById("loading");
+
+const overlay =
+  document.getElementById("pushOverlay");
+
+const allowBtn =
+  document.getElementById("allowPushBtn");
+
+const cancelBtn =
+  document.getElementById("cancelPushBtn");
+
+const pushStatus =
+  document.getElementById("pushStatus");
+
 
 let currentLoginToken = "";
+
 let currentBridgeUrl = "";
+
 let swRegistration = null;
 
-frame.addEventListener("load", function(){
-  loading.style.display = "none";
-});
+
+/* =========================================
+   IFRAME LOADING
+========================================= */
+
+frame.addEventListener(
+  "load",
+  function() {
+
+    loading.style.display =
+      "none";
+
+  }
+);
+
+
+/* =========================================
+   FIREBASE
+========================================= */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDJVPZFRkzWKJ58cyIfaiuPqdvY4cYYzvE",
-  authDomain: "sns-maintenance-pwa.firebaseapp.com",
-  projectId: "sns-maintenance-pwa",
-  storageBucket: "sns-maintenance-pwa.firebasestorage.app",
-  messagingSenderId: "683218813920",
-  appId: "1:683218813920:web:a091496adb477c47502185"
+
+  apiKey:
+    "AIzaSyDJVPZFRkzWKJ58cyIfaiuPqdvY4cYYzvE",
+
+  authDomain:
+    "sns-maintenance-pwa.firebaseapp.com",
+
+  projectId:
+    "sns-maintenance-pwa",
+
+  storageBucket:
+    "sns-maintenance-pwa.firebasestorage.app",
+
+  messagingSenderId:
+    "683218813920",
+
+  appId:
+    "1:683218813920:web:a091496adb477c47502185"
+
 };
+
+
+firebase.initializeApp(
+  firebaseConfig
+);
+
+
+const messaging =
+  firebase.messaging();
+
 
 const VAPID_KEY =
   "BAC5d1x13WjnMMSiJQKMCVXYCN4HdeMg4bzCu3Mbj14SfFJtvs3dg2AgBvFWGRW_GaFFg0cnNZNyfr5tjclcots";
 
-firebase.initializeApp(firebaseConfig);
-const messaging = firebase.messaging();
 
-async function registerServiceWorker(){
-  if (!("serviceWorker" in navigator)) {
-    throw new Error("Service Worker supported नहीं है।");
-  }
+/* =========================================
+   SERVICE WORKER
+========================================= */
 
-  if (!swRegistration) {
-    swRegistration = await navigator.serviceWorker.register(
-      "./firebase-messaging-sw.js",
-      {scope:"./"}
+async function registerServiceWorker() {
+
+  if (
+    !("serviceWorker" in navigator)
+  ) {
+
+    throw new Error(
+      "इस browser में Service Worker support नहीं है।"
     );
-    await navigator.serviceWorker.ready;
+
   }
+
+
+  swRegistration =
+    await navigator
+      .serviceWorker
+      .register(
+        "./firebase-messaging-sw.js"
+      );
+
+
+  await navigator
+    .serviceWorker
+    .ready;
+
 
   return swRegistration;
 }
 
-async function createFcmToken(){
-  if (!("Notification" in window)) {
-    throw new Error("यह browser notifications support नहीं करता।");
+
+/* =========================================
+   CREATE FCM TOKEN
+========================================= */
+
+async function createFCMToken() {
+
+  if (
+    !("Notification" in window)
+  ) {
+
+    throw new Error(
+      "इस browser में notifications support नहीं हैं।"
+    );
+
   }
 
-  const registration = await registerServiceWorker();
-  let permission = Notification.permission;
 
-  if (permission === "default") {
-    permission = await Notification.requestPermission();
+  const registration =
+    await registerServiceWorker();
+
+
+  let permission =
+    Notification.permission;
+
+
+  if (
+    permission === "default"
+  ) {
+
+    permission =
+      await Notification
+        .requestPermission();
+
   }
 
-  if (permission !== "granted") {
-    throw new Error("Notification permission Allow करनी होगी।");
+
+  if (
+    permission !== "granted"
+  ) {
+
+    throw new Error(
+      "Notification permission Allow करें।"
+    );
+
   }
 
-  const token = await messaging.getToken({
-    vapidKey: VAPID_KEY,
-    serviceWorkerRegistration: registration
-  });
 
-  if (!token || token.length < 40) {
-    throw new Error("FCM token generate नहीं हुआ।");
+  const token =
+    await messaging.getToken({
+
+      vapidKey:
+        VAPID_KEY,
+
+      serviceWorkerRegistration:
+        registration
+
+    });
+
+
+  if (!token) {
+
+    throw new Error(
+      "FCM Token नहीं मिला।"
+    );
+
   }
 
-  localStorage.setItem("snsFcmToken", token);
+
+  console.log(
+    "SNS FCM TOKEN:",
+    token
+  );
+
+
+  localStorage.setItem(
+    "snsFcmToken",
+    token
+  );
+
+
   return token;
 }
 
-function sendTokenToAppsScript(fcmToken){
+
+/* =========================================
+   REGISTER TOKEN IN APPS SCRIPT
+========================================= */
+
+function registerTokenInSheet(
+  fcmToken
+) {
+
   if (!currentBridgeUrl) {
-    throw new Error("Push bridge URL नहीं मिला।");
+
+    throw new Error(
+      "Push bridge URL नहीं मिला।"
+    );
+
   }
+
+
   if (!currentLoginToken) {
-    throw new Error("Technician login token नहीं मिला।");
+
+    throw new Error(
+      "Technician login token नहीं मिला।"
+    );
+
   }
 
-  const url = new URL(currentBridgeUrl);
-  url.searchParams.set("mode","register");
-  url.searchParams.set("loginToken",currentLoginToken);
-  url.searchParams.set("fcmToken",fcmToken);
 
-  let bridge = document.getElementById("snsPushBridge");
+  const url =
+    new URL(
+      currentBridgeUrl
+    );
+
+
+  url.searchParams.set(
+    "mode",
+    "register"
+  );
+
+
+  url.searchParams.set(
+    "loginToken",
+    currentLoginToken
+  );
+
+
+  url.searchParams.set(
+    "fcmToken",
+    fcmToken
+  );
+
+
+  let bridge =
+    document.getElementById(
+      "snsPushBridge"
+    );
+
+
   if (!bridge) {
-    bridge = document.createElement("iframe");
-    bridge.id = "snsPushBridge";
-    bridge.style.display = "none";
-    document.body.appendChild(bridge);
+
+    bridge =
+      document.createElement(
+        "iframe"
+      );
+
+
+    bridge.id =
+      "snsPushBridge";
+
+
+    bridge.style.display =
+      "none";
+
+
+    document.body
+      .appendChild(
+        bridge
+      );
+
   }
-  bridge.src = url.toString();
+
+
+  bridge.src =
+    url.toString();
 }
 
-async function doPushRegistration(){
-  allowBtn.disabled = true;
-  pushStatus.textContent = "Notification permission check हो रही है...";
 
-  try {
-    const token = await createFcmToken();
-    pushStatus.textContent = "FCM token बन गया। Register हो रहा है...";
-    sendTokenToAppsScript(token);
-  } catch (error) {
-    allowBtn.disabled = false;
-    pushStatus.textContent = error && error.message ? error.message : "Notification setup failed.";
-    frame.contentWindow.postMessage({
-      type:"SNS_PUSH_ERROR",
-      message:pushStatus.textContent
-    },"*");
-  }
-}
+/* =========================================
+   ALLOW BUTTON
+========================================= */
 
-allowBtn.addEventListener("click", doPushRegistration);
-cancelBtn.addEventListener("click", function(){overlay.classList.remove("show");});
+allowBtn.addEventListener(
+  "click",
+  async function() {
 
-window.addEventListener("message", async function(event){
-  const data = event.data || {};
+    allowBtn.disabled =
+      true;
 
-  if (data.type === "SNS_LOGIN_READY") {
-    currentLoginToken = String(data.loginToken || "");
-    return;
-  }
 
-  if (data.type === "SNS_ENABLE_PUSH") {
-    currentLoginToken = String(data.loginToken || currentLoginToken || "");
-    currentBridgeUrl = String(data.bridgeUrl || "");
+    pushStatus.textContent =
+      "Notification enable हो रही है...";
 
-    if (!currentLoginToken) {
-      frame.contentWindow.postMessage({
-        type:"SNS_PUSH_ERROR",
-        message:"Technician login token नहीं मिला।"
-      },"*");
-      return;
-    }
 
-    if (!currentBridgeUrl) {
-      frame.contentWindow.postMessage({
-        type:"SNS_PUSH_ERROR",
-        message:"Push bridge URL नहीं मिला।"
-      },"*");
-      return;
-    }
-
-    if (Notification.permission === "granted") {
-      try {
-        const token = await createFcmToken();
-        sendTokenToAppsScript(token);
-      } catch (error) {
-        frame.contentWindow.postMessage({
-          type:"SNS_PUSH_ERROR",
-          message:error.message || String(error)
-        },"*");
-      }
-      return;
-    }
-
-    overlay.classList.add("show");
-    pushStatus.textContent = "";
-    allowBtn.disabled = false;
-    return;
-  }
-
-  if (data.type === "SNS_REGISTER_FCM_RESULT") {
-    overlay.classList.remove("show");
-    allowBtn.disabled = false;
-    frame.contentWindow.postMessage(data,"*");
-  }
-});
-
-messaging.onMessage(function(payload){
-  const title = payload.notification && payload.notification.title
-    ? payload.notification.title
-    : "🚨 SNS Maintenance";
-
-  const body = payload.notification && payload.notification.body
-    ? payload.notification.body
-    : "New maintenance complaint";
-
-  if (Notification.permission === "granted") {
     try {
-      new Notification(title,{
-        body:body,
-        icon:"./icon-192.png",
-        badge:"./icon-192.png",
-        tag:"sns-maintenance",
-        requireInteraction:true,
-        vibrate:[300,150,300,150,500]
-      });
-    } catch(ignore){}
+
+      const fcmToken =
+        await createFCMToken();
+
+
+      pushStatus.textContent =
+        "Token बन गया। Register हो रहा है...";
+
+
+      registerTokenInSheet(
+        fcmToken
+      );
+
+    }
+    catch(error) {
+
+      console.error(
+        error
+      );
+
+
+      allowBtn.disabled =
+        false;
+
+
+      pushStatus.textContent =
+        error &&
+        error.message
+          ? error.message
+          : String(error);
+
+
+      frame.contentWindow
+        .postMessage({
+
+          type:
+            "SNS_PUSH_ERROR",
+
+          message:
+            pushStatus.textContent
+
+        }, "*");
+
+    }
+
   }
-});
+);
+
+
+/* =========================================
+   CANCEL
+========================================= */
+
+cancelBtn.addEventListener(
+  "click",
+  function() {
+
+    overlay.classList
+      .remove(
+        "show"
+      );
+
+  }
+);
+
+
+/* =========================================
+   MESSAGE FROM TECHNICIAN APP
+========================================= */
+
+window.addEventListener(
+  "message",
+  async function(event) {
+
+    const data =
+      event.data || {};
+
+
+    console.log(
+      "SNS MESSAGE:",
+      data
+    );
+
+
+    /* Login token */
+
+    if (
+      data.type ===
+      "SNS_LOGIN_READY"
+    ) {
+
+      currentLoginToken =
+        String(
+          data.loginToken || ""
+        );
+
+
+      console.log(
+        "LOGIN TOKEN RECEIVED"
+      );
+
+
+      return;
+    }
+
+
+    /* Enable Push */
+
+    if (
+      data.type ===
+      "SNS_ENABLE_PUSH"
+    ) {
+
+      console.log(
+        "SNS_ENABLE_PUSH RECEIVED"
+      );
+
+
+      currentLoginToken =
+        String(
+          data.loginToken ||
+          currentLoginToken ||
+          ""
+        );
+
+
+      currentBridgeUrl =
+        String(
+          data.bridgeUrl || ""
+        );
+
+
+      if (
+        !currentLoginToken
+      ) {
+
+        alert(
+          "Technician login token नहीं मिला।"
+        );
+
+        return;
+      }
+
+
+      if (
+        !currentBridgeUrl
+      ) {
+
+        alert(
+          "Push bridge URL नहीं मिला।"
+        );
+
+        return;
+      }
+
+
+      /*
+       IMPORTANT:
+       Permission popup top-level page
+       से open होगा।
+      */
+
+      overlay.classList
+        .add(
+          "show"
+        );
+
+
+      pushStatus.textContent =
+        "नीचे Allow Notifications दबाएँ।";
+
+
+      allowBtn.disabled =
+        false;
+
+
+      return;
+    }
+
+
+    /* Registration Result */
+
+    if (
+      data.type ===
+      "SNS_REGISTER_FCM_RESULT"
+    ) {
+
+      if (
+        data.success
+      ) {
+
+        overlay.classList
+          .remove(
+            "show"
+          );
+
+
+        allowBtn.disabled =
+          false;
+
+
+        frame.contentWindow
+          .postMessage({
+
+            type:
+              "SNS_REGISTER_FCM_RESULT",
+
+            success:
+              true
+
+          }, "*");
+
+      }
+      else {
+
+        allowBtn.disabled =
+          false;
+
+
+        pushStatus.textContent =
+          data.message ||
+          "FCM token registration failed.";
+
+      }
+
+    }
+
+  }
+);
+
+
+/* =========================================
+   FOREGROUND PUSH
+========================================= */
+
+messaging.onMessage(
+  function(payload) {
+
+    console.log(
+      "Foreground Push:",
+      payload
+    );
+
+
+    const title =
+      payload.notification &&
+      payload.notification.title
+        ? payload.notification.title
+        : "🚨 SNS Maintenance";
+
+
+    const body =
+      payload.notification &&
+      payload.notification.body
+        ? payload.notification.body
+        : "New maintenance complaint";
+
+
+    if (
+      Notification.permission ===
+      "granted"
+    ) {
+
+      try {
+
+        new Notification(
+          title,
+          {
+
+            body:
+              body,
+
+            icon:
+              "./icon-192.png",
+
+            badge:
+              "./icon-192.png",
+
+            tag:
+              "sns-maintenance",
+
+            requireInteraction:
+              true,
+
+            vibrate:
+              [
+                300,
+                150,
+                300,
+                150,
+                500
+              ]
+
+          }
+        );
+
+      }
+      catch(ignore) {}
+
+    }
+
+  }
+);
+
 </script>
+
 </body>
 </html>
